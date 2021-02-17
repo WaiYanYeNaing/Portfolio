@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,11 +14,49 @@ import NavPills from "components/NavPills/NavPills.js";
 
 import styles from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.js";
 import { PersonPinRounded, WorkRounded } from "@material-ui/icons";
+import sanityClient from "../../../client.js";
 
 const useStyles = makeStyles(styles);
 
 export default function SectionPills() {
   const classes = useStyles();
+
+  const [me, setMe] = useState({ detail: [], title: "" });
+  const [myWork, setMyWork] = useState({ detail: [], title: "" });
+
+  useEffect(() => {
+    getMe();
+    getMyWork();
+  }, []);
+
+  const getMe = async () => {
+    await sanityClient
+      .fetch(
+        `*[_type == "me"]{
+      title,
+      detail, 
+    }`
+      )
+      .then((res) => {
+        setMe(res[0]);
+      })
+      .catch(console.error);
+  };
+
+  const getMyWork = async () => {
+    await sanityClient
+      .fetch(
+        `*[_type == "myWork"]{
+      title,
+      detail, 
+    }`
+      )
+      .then((res) => {
+        setMyWork(res[0]);
+      })
+      .catch(console.error);
+  };
+
   return (
     <div className={classes.section}>
       <div className={classes.container}>
@@ -33,53 +71,34 @@ export default function SectionPills() {
                 }}
                 tabs={[
                   {
-                    tabButton: "See Who I Am?",
+                    tabButton: me.title,
                     tabIcon: PersonPinRounded,
                     tabContent: (
                       <span>
-                        <p>
-                          Collaboratively administrate empowered markets via
-                          plug-and-play networks. Dynamically procrastinate B2C
-                          users after installed base benefits.
-                        </p>
-                        <br />
-                        <p>
-                          Dramatically visualize customer directed convergence
-                          without revolutionary ROI. Collaboratively
-                          administrate empowered markets via plug-and-play
-                          networks. Dynamically procrastinate B2C users after
-                          installed base benefits.
-                        </p>
-                        <br />
-                        <p>
-                          Dramatically visualize customer directed convergence
-                          without revolutionary ROI. Collaboratively
-                          administrate empowered markets via plug-and-play
-                          networks. Dynamically procrastinate B2C users after
-                          installed base benefits.
-                        </p>
+                        {me.detail.map((v, i) => {
+                          return (
+                            <div key={i}>
+                              <p>{v.children[0].text}</p>
+                              <br />
+                            </div>
+                          );
+                        })}
                       </span>
                     ),
                   },
                   {
-                    tabButton: "See My Work",
+                    tabButton: myWork.title,
                     tabIcon: WorkRounded,
                     tabContent: (
                       <span>
-                        <p>
-                          Efficiently unleash cross-media information without
-                          cross-media value. Quickly maximize timely
-                          deliverables for real-time schemas.
-                        </p>
-                        <br />
-                        <p>
-                          Dramatically maintain clicks-and-mortar solutions
-                          without functional solutions. Dramatically visualize
-                          customer directed convergence without revolutionary
-                          ROI. Collaboratively administrate empowered markets
-                          via plug-and-play networks. Dynamically procrastinate
-                          B2C users after installed base benefits.
-                        </p>
+                        {myWork.detail.map((v, i) => {
+                          return (
+                            <div key={i}>
+                              <p>{v.children[0].text}</p>
+                              <br />
+                            </div>
+                          );
+                        })}
                       </span>
                     ),
                   },

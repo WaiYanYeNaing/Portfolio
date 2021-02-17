@@ -4,27 +4,30 @@ import GridItem from "components/Grid/GridItem";
 import React, { useState } from "react";
 import styles from "assets/jss/material-kit-react/views/componentsSections/basicsStyle.js";
 import { makeStyles } from "@material-ui/core";
+import sanityClient from "../../../client.js";
+import { useEffect } from "react";
 
 const useStyles = makeStyles(styles);
 
 export default function SectionSkills() {
   const classes = useStyles();
 
-  const [progress, setprogress] = useState([
-    { name: "HTML", value: 100, color: "primary" },
-    { name: "CSS", value: 100, color: "info" },
-    { name: "Javascript", value: 100, color: "success" },
-    { name: "Vue", value: 100, color: "warning" },
-    { name: "React", value: 75, color: "danger" },
-    { name: "React Native", value: 75, color: "rose" },
-    { name: "Vuetify", value: 100, color: "primary" },
-    { name: "Material UI", value: 100, color: "info" },
-    { name: "Node JS", value: 65, color: "success" },
-    { name: "SQL", value: 75, color: "warning" },
-    { name: ".NetCore", value: 80, color: "danger" },
-    { name: "Tensorflow", value: 60, color: "rose" },
-    { name: "Flutter", value: 30, color: "primary" },
-  ]);
+  const [progress, setprogress] = useState([]);
+
+  useEffect(() => {
+    sanityClient
+      .fetch(
+        `*[_type == "skillProgress"]{
+      name,
+      value,
+      color,
+    }`
+      )
+      .then((res) => {
+        setprogress(res);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <div className={classes.section}>
