@@ -46,7 +46,7 @@ export default function SectionCompleted(props) {
             color="primary"
             tabs={[
               {
-                tabButton: "Studio",
+                tabButton: "PluralSight",
                 tabIcon: Camera,
                 tabContent: (
                   <GridContainer justify="center">
@@ -85,7 +85,7 @@ export default function SectionCompleted(props) {
                 ),
               },
               {
-                tabButton: "Work",
+                tabButton: "YouTube",
                 tabIcon: Palette,
                 tabContent: (
                   <GridContainer justify="center">

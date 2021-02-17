@@ -8,6 +8,7 @@ import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
 // core components
 import styles from "assets/jss/material-kit-react/views/componentsSections/downloadStyle.js";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(styles);
 
@@ -25,14 +26,11 @@ export default function SectionCurrentLearning() {
             </h4>
           </GridItem>
           <GridItem xs={12} sm={8} md={6}>
-            <Button
-              color="primary"
-              size="lg"
-              href="https://www.creative-tim.com/product/material-kit-react?ref=mkr-download-section"
-              target="_blank"
-            >
-              See What Am I Learning
-            </Button>
+            <Link to="currentlearning" className={classes.link}>
+              <Button color="primary" size="lg">
+                See What Am I Learning
+              </Button>
+            </Link>
           </GridItem>
         </GridContainer>
       </div>

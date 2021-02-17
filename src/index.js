@@ -13,6 +13,7 @@ import LoginPage from "views/LoginPage/LoginPage.js";
 import Home from "views/Pages/Home";
 import Projects from "views/Pages/Projects";
 import LearnProof from "views/Pages/LearningCompleted";
+import CurrentLearning from "views/Pages/CurrentLearning";
 
 var hist = createBrowserHistory();
 
@@ -25,6 +26,7 @@ ReactDOM.render(
       <Route path="/doc" component={Components} />
       <Route path="/projects" component={Projects} />
       <Route path="/learningcompleted" component={LearnProof} />
+      <Route path="/currentlearning" component={CurrentLearning} />
       <Route path="/" component={Home} />
     </Switch>
   </Router>,
