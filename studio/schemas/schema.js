@@ -12,6 +12,9 @@ import author from "./author";
 import skillProgress from "./skillProgress";
 import me from "./me";
 import myWork from "./myWork";
+import pluralsight from "./pluralsight";
+import youTube from "./youTube";
+import project from "./project";
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -28,6 +31,9 @@ export default createSchema({
     skillProgress,
     me,
     myWork,
+    pluralsight,
+    youTube,
+    project,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
     blockContent,

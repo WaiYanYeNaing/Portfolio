@@ -1,12 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-// @material-ui/icons
-import Camera from "@material-ui/icons/Camera";
-import Palette from "@material-ui/icons/Palette";
-import Favorite from "@material-ui/icons/Favorite";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -25,19 +21,69 @@ import work4 from "assets/img/examples/mariya-georgieva.jpg";
 import work5 from "assets/img/examples/clem-onojegaw.jpg";
 
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
+import sanityClient from "../../../client.js";
+import { Button } from "@material-ui/core";
+import { Camera, Favorite } from "@material-ui/icons";
+import YouTubeIcon from "@material-ui/icons/YouTube";
+// @material-ui/icons
+import YouTube from "react-youtube";
 
 const useStyles = makeStyles(styles);
 
 export default function SectionCompleted(props) {
   const classes = useStyles();
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
+  const [pluralsight, setPluralsight] = useState([]);
+  const [youTube, setYouTube] = useState([]);
+  const opts = {
+    width: "300",
+    height: "200",
+    playerVars: {
+      autoplay: 0,
+    },
+  };
+
+  useEffect(() => {
+    getPluralsight();
+    getYouTube();
+  }, []);
+
+  const getPluralsight = async () => {
+    await sanityClient
+      .fetch(
+        `*[_type == "pluralsight"]{
+      title,
+      "certificateURL": certificate.asset->url,
+      "mainImageURL": mainImage.asset->url
+    }`
+      )
+      .then((res) => {
+        setPluralsight(res);
+      })
+      .catch(console.error);
+  };
+
+  const getYouTube = async () => {
+    await sanityClient
+      .fetch(
+        `*[_type == "youTube"]{
+      title,
+      videoId, 
+    }`
+      )
+      .then((res) => {
+        setYouTube(res);
+      })
+      .catch(console.error);
+  };
+
   return (
     <div className={classes.container}>
       <GridContainer justify="center">
         <GridItem
           xs={12}
           sm={12}
-          md={8}
+          md={10}
           className={classes.navWrapper}
           style={{ marginTop: "5rem" }}
         >
@@ -50,54 +96,29 @@ export default function SectionCompleted(props) {
                 tabIcon: Camera,
                 tabContent: (
                   <GridContainer justify="center">
-                    <GridItem xs={12} sm={12} md={4}>
-                      <img
-                        alt="..."
-                        src={studio1}
-                        className={navImageClasses}
-                      />
-                      <img
-                        alt="..."
-                        src={studio2}
-                        className={navImageClasses}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={4}>
-                      <img
-                        alt="..."
-                        src={studio5}
-                        className={navImageClasses}
-                      />
-                      <img
-                        alt="..."
-                        src={studio4}
-                        className={navImageClasses}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <img
-                        alt="..."
-                        src={studio6}
-                        className={navImageClasses}
-                      />
-                    </GridItem>
+                    {pluralsight.map((v, i) => (
+                      <a target="_blank" href={v.certificateURL} key={i}>
+                        <GridItem xs={12} sm={12} md={12}>
+                          <img
+                            src={v.mainImageURL}
+                            className={navImageClasses}
+                          />
+                        </GridItem>
+                      </a>
+                    ))}
                   </GridContainer>
                 ),
               },
               {
                 tabButton: "YouTube",
-                tabIcon: Palette,
+                tabIcon: YouTubeIcon,
                 tabContent: (
                   <GridContainer justify="center">
-                    <GridItem xs={12} sm={12} md={4}>
-                      <img alt="..." src={work1} className={navImageClasses} />
-                      <img alt="..." src={work2} className={navImageClasses} />
-                      <img alt="..." src={work3} className={navImageClasses} />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={4}>
-                      <img alt="..." src={work4} className={navImageClasses} />
-                      <img alt="..." src={work5} className={navImageClasses} />
-                    </GridItem>
+                    {youTube.map((v, i) => (
+                      <GridItem xs={12} sm={12} md={4} key={i}>
+                        <YouTube videoId={v.videoId} opts={opts} />
+                      </GridItem>
+                    ))}
                   </GridContainer>
                 ),
               },

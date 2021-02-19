@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // react components for routing our app without refresh
 import { Link } from "react-router-dom";
 // @material-ui/core components
@@ -14,27 +14,49 @@ import landing from "assets/img/landing.jpg";
 import profile from "assets/img/profile.jpg";
 
 import styles from "assets/jss/material-kit-react/views/componentsSections/exampleStyle.js";
+import sanityClient from "../../../client.js";
 
 const useStyles = makeStyles(styles);
 
 export default function SectionExamples() {
   const classes = useStyles();
 
-  const [projects, setprojects] = useState([
-    { img: landing, link: "landing-page" },
-    { img: profile, link: "profile-page" },
-    { img: profile, link: "profile-page" },
-  ]);
+  const [projects, setprojects] = useState([]);
+
+  useEffect(() => {
+    getProject();
+  }, []);
+
+  const getProject = async () => {
+    await sanityClient
+      .fetch(
+        `*[_type == "project"]{
+      title,
+      projectLink,
+      "mainImageURL": mainImage.asset->url
+    }`
+      )
+      .then((res) => {
+        setprojects(res);
+      })
+      .catch(console.error);
+  };
 
   return (
     <div className={classes.section}>
       <div className={classes.container}>
         <GridContainer justify="center">
           {projects.map((v, i) => (
-            <GridItem xs={12} sm={12} md={5} style={{ marginTop: "80px" }}>
-              <Link to={v.link} className={classes.link}>
+            <GridItem
+              xs={12}
+              sm={12}
+              md={5}
+              key={i}
+              style={{ marginTop: "80px" }}
+            >
+              <a target="_blank" href={v.projectLink}>
                 <img
-                  src={v.img}
+                  src={v.mainImageURL}
                   alt="..."
                   className={
                     classes.imgRaised +
@@ -45,9 +67,9 @@ export default function SectionExamples() {
                   }
                 />
                 <Button color="primary" size="lg" simple>
-                  View landing page
+                  {v.title}
                 </Button>
-              </Link>
+              </a>
             </GridItem>
           ))}
         </GridContainer>
